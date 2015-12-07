@@ -1,0 +1,63 @@
+.filterContainer{
+	display: inline-block;
+	border: 1px solid black;
+	border-radius: 5px;
+	padding: 10px;
+	height:100px;
+	float: left;
+}
+
+.searchResultContainer{
+	clear: both;
+}
+
+.searchResult{
+	float:left;
+	margin:5px;
+
+}
+
+.card {
+  position: relative;
+  float: left;
+  padding-bottom: 25%;
+  width: 25%;
+  text-align: center;
+}
+
+.cardFront,
+.cardBack {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 223px;
+  height: 310px;
+}
+
+.cardFront,
+.cardBack {
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  -webkit-transition: -webkit-transform 0.3s;
+          transition: transform 0.3s;
+}
+
+.cardBack {
+    position: absolute;
+	top:0;
+	left:0;
+	border: 1px solid black;
+	border-radius: 10px;
+    -webkit-transform: rotateY(-180deg);
+          transform: rotateY(-180deg);
+}
+
+.card.effectHover:hover .cardFront {
+  -webkit-transform: rotateY(-180deg);
+          transform: rotateY(-180deg);
+}
+
+.card.effectHover:hover .cardBack {
+  -webkit-transform: rotateY(0);
+          transform: rotateY(0);
+}

@@ -1,0 +1,110 @@
+var app = angular.module('myApp', []);
+
+app.factory("CardRequester", function($http, $q){
+	var CardRequester = {};
+	var baseURL = 'https://api.deckbrew.com/mtg/';
+	var _finalURL = '';
+
+	var makeURL = function(options){
+		_finalURL = baseURL + options;
+	};
+
+
+	CardRequester.makeRequest = function(options){
+		makeURL(options);
+		var deffered = $q.defer();
+		$http({
+			method: 'GET',
+			url: _finalURL
+		}).success(function(data){
+			deffered.resolve(data);
+		}).error(function(){
+			deffered.reject('There was an error');
+		});
+		return deffered.promise;
+	};
+
+	return CardRequester;
+});
+
+app.controller('mainController', function($scope, CardRequester){
+	var itemID = 0;
+	$scope.title = "Magic";
+	$scope.sets = {};
+	$scope.searchResults = {};
+	$scope.subTypeFilter = '';
+	$scope.superTypeFilter = '';
+	$scope.nameFilter = '';
+	$scope.colorFilter = [{name:'White', selected:false}, {name:'Black', selected:false}, {name:'Blue', selected:false}, {name:'Red', selected:false}, {name:'Green', selected:false}, {name:'Multicolor', selected:false},];
+	$scope.typeFilter = [{name:'creature', selected:false}, {name:'Instant', selected:false}, {name:'Sorcery', selected:false}, {name:'Enchantment', selected:false}, {name:'Artifact', selected:false}, {name:'Land', selected:false}];
+	$scope.rarityFilter = [{name:'Mythic', selected:false}, {name:'Rare', selected:false}, {name:'Uncommon', selected:false}, {name:'Common', selected:false}];
+	$scope.legalityFilter = "";
+	$scope.formatFilter = "";
+
+	$scope.getSets = function(){
+		CardRequester.makeRequest("sets").then(function(data){
+			$scope.sets = data;
+		});
+	}
+
+	function optionsBuilder(){
+		var optionString = "cards?";
+		//Name
+		if($scope.nameFilter != ""){
+			optionString += "name=" + $scope.nameFilter + "&";
+		}		
+		//Color
+		for(var i = 0; i < $scope.colorFilter.length; i++){
+			if($scope.colorFilter[i].selected){
+				optionString += "color=" + angular.lowercase($scope.colorFilter[i].name) + "&";
+			}
+		}
+		//Type
+		for(i = 0; i < $scope.typeFilter.length; i++){
+			if($scope.typeFilter[i].selected){
+				optionString += "type=" + angular.lowercase($scope.typeFilter[i].name) + "&";
+			}
+		}
+		//Rarity
+		for(i = 0; i < $scope.rarityFilter.length; i++){
+			if($scope.rarityFilter[i].selected){
+				optionString += "rarity=" + angular.lowercase($scope.rarityFilter[i].name) + "&";
+			}
+		}
+		//Legality
+		if($scope.legalityFilter != ""){
+			optionString += "status=" + angular.lowercase($scope.legalityFilter) + "&";
+		}
+		//format
+		if($scope.formatFilter != ""){
+			optionString += "format=" + angular.lowercase($scope.formatFilter) +  "&";
+		}
+		//Subtype
+		if($scope.subTypeFilter != ""){
+			optionString += "subtype=" + angular.lowercase($scope.subTypeFilter) + "&";
+		}
+		//Supertype
+		if($scope.superTypeFilter != ""){
+			optionString += "supertype=" + angular.lowercase($scope.superTypeFilter);
+		}
+		return optionString;
+	}
+
+	$scope.cardSearch = function(){
+		var options = optionsBuilder();
+		CardRequester.makeRequest(options).then(function(data){
+			$scope.searchResults = data;
+			console.log(data);
+		});
+	};
+
+	$scope.getImageSource = function(editions){
+		for(var i = 0; i < editions.length; i++){
+			if(editions[i].image_url != "https://image.deckbrew.com/mtg/multiverseid/0.jpg"){
+				return editions[i].image_url;
+			}
+		}
+	}
+
+	$scope.getSets();
+});
