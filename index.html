@@ -4,53 +4,61 @@
     <link rel="stylesheet" href="app/Styles/global.css">
   </head>
   <body>
-    	<div ng-controller="mainController">
+    <div class="contentContainer">
+    	<div ng-controller="mainController">            
             <div class="filterContainer">
-                <label for='setName'>Set Name:</label>
-                <select id="setName" multiple>
-                    <option ng-repeat="set in sets" value="set.id">{{set.name}}</option>
-                </select>
-            </div>
-            <div class="filterContainer">
+                <label class="filterLabel">Color: </label>
                 <label ng-repeat="color in colorFilter">
                     <input type="checkbox"  value="{{color.name}}" ng-model="color.selected"/>
                     {{color.name}}
                 </label>
-            </div>
-            <div class="filterContainer">
+                <br/>
+                <br/>
+                <label class="filterLabel">Rarity: </label>
                 <label ng-repeat="rarity in rarityFilter">
                     <input type="checkbox"  value="{{rarity.name}}" ng-model="rarity.selected"/>
                     {{rarity.name}}
                 </label>
+                <br/>
+                <br/>
+                <label class="filterLabel">Type: </label>
+                <label ng-repeat="type in typeFilter">
+                    <input type="checkbox"  value="{{type.name}}" ng-model="type.selected"/>
+                    {{type.name}}
+                </label>
             </div>
             <div class="filterContainer">
+                <label class="filterLabel">Format: </label>
                 <input type="radio" value="Standard" ng-model="formatFilter">Standard</input>
                 <input type="radio" value="Modern" ng-model="formatFilter">Modern</input>
                 <input type="radio" value="Commander" ng-model="formatFilter">Commander</input>
                 <input type="radio" value="Legacy" ng-model="formatFilter">Legacy</input>
                 <input type="radio" value="Vintage" ng-model="formatFilter">Vintage</input>
                 <input type="radio" value="" ng-model="formatFilter" checked>None</input>
-            </div>
-            <div class='filterContainer'>
+                <br/>
+                <br/>
+                <label class="filterLabel">Status: </label>
                 <input type="radio" value="Legal" ng-model="legalityFilter">Legal</input>
                 <input type="radio" value="Restricted" ng-model="legalityFilter">Restricted</input>
                 <input type="radio" value="Banned" ng-model="legalityFilter">Banned</input>
                 <input type="radio" value="" ng-model="legalityFilter" checked>None</input>
             </div>
-            <div class='filterContainer'>
-                <label ng-repeat="type in typeFilter">
-                    <input type="checkbox"  value="{{type.name}}" ng-model="type.selected"/>
-                    {{type.name}}
-                </label>
+            <div class="filterContainer">
+                <label class="filterLabel" for='setName' style='vertical-align: top;'>Set Name:</label>
+                <select id="setName" multiple>
+                    <option ng-repeat="set in sets" value="set.id">{{set.name}}</option>
+                </select>
             </div>
             <div class='filterContainer'>
-                <label>Card Subtype: </label>
+                <label class="filterLabel">Card Subtype: </label>
                 <input type="text" ng-model="subTypeFilter"/>
-                <br>
-                <label>Card Supertype: </label>
+                <br/>
+                <br/>
+                <label class="filterLabel">Card Supertype: </label>
                 <input type="text" ng-model="superTypeFilter"/>
-                <br>
-                <label>Card Name: </label>
+                <br/>
+                <br/>
+                <label class="filterLabel">Card Name: </label>
                 <input type="text" ng-model="nameFilter"/>
             </div>
             <div class='filterContainer'>
@@ -71,7 +79,8 @@
                     </div>
                 </div>
             </div>
-      </div>
+        </div>
+    </div>
       <script src="app/Vendor/angular.min.js"></script>
       <script src="app/Vendor/ngStorage.min.js"></script>
       <script src="app/js/main.js"></script>

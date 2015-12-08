@@ -35,8 +35,8 @@ app.controller('mainController', function($scope, CardRequester){
 	$scope.subTypeFilter = '';
 	$scope.superTypeFilter = '';
 	$scope.nameFilter = '';
-	$scope.colorFilter = [{name:'White', selected:false}, {name:'Black', selected:false}, {name:'Blue', selected:false}, {name:'Red', selected:false}, {name:'Green', selected:false}, {name:'Multicolor', selected:false},];
-	$scope.typeFilter = [{name:'creature', selected:false}, {name:'Instant', selected:false}, {name:'Sorcery', selected:false}, {name:'Enchantment', selected:false}, {name:'Artifact', selected:false}, {name:'Land', selected:false}];
+	$scope.colorFilter = [{name:'White', selected:false}, {name:'Black', selected:false}, {name:'Blue', selected:false}, {name:'Red', selected:false}, {name:'Green', selected:false}];
+	$scope.typeFilter = [{name:'Creature', selected:false}, {name:'Instant', selected:false}, {name:'Sorcery', selected:false}, {name:'Enchantment', selected:false}, {name:'Artifact', selected:false}, {name:'Land', selected:false}];
 	$scope.rarityFilter = [{name:'Mythic', selected:false}, {name:'Rare', selected:false}, {name:'Uncommon', selected:false}, {name:'Common', selected:false}];
 	$scope.legalityFilter = "";
 	$scope.formatFilter = "";
