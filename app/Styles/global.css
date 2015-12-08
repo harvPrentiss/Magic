@@ -55,6 +55,7 @@ body{
 .card:hover .cardControls {
     background-color: rgba(5,5,5,0.9);
     bottom: 35px;
+    z-index: 5;
 }
 
 input[type='text']{
@@ -73,10 +74,11 @@ select{
 }
 
 .ctrlLabel{
-	display: inline-block;
-	width: 25px;
+	display: inline-block;	
 }
 
 .favImg{
 	background-image: url('../Media/favorites.png');
+	width: 25px;
+	height: 100%;
 }
