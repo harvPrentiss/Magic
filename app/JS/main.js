@@ -104,6 +104,8 @@ app.controller('mainController', function($scope, CardRequester){
 				return editions[i].image_url;
 			}
 		}
+
+		return "https://image.deckbrew.com/mtg/multiverseid/0.jpg";
 	}
 
 	$scope.getSets();

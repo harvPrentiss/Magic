@@ -10,18 +10,37 @@ body{
   clear:both;
 }
 
+.mainFilterContainer{
+	width: 50%;
+	margin: 0 auto;
+	padding: 10px 0;
+}
+
 .filterLabel{
   font-weight: bold;
 }
 
 .filterContainer{
-	display: inline-block;
+	display: block;
 	border: 1px solid #808080;
 	border-radius: 5px;
 	padding: 10px;
 	max-height:100px;
-	float: left;
-  margin: 0 10px 10px 0;
+  	margin: 0 auto 10px auto;
+}
+
+.searchBtn{
+	display: block;
+	margin: 0 auto;
+	border-color: black;
+	border-radius: 5px;
+	background-color: white;
+	padding: 5px;
+	font-size: 14pt;
+}
+
+.searchBtn:hover{
+	background-color: gray;
 }
 
 .searchResultContainer{
@@ -62,7 +81,26 @@ body{
 }
 
 input[type='text']{
-  border-radius: 10px;
+  border-radius: 5px;
+  padding-left: 2px;
+}
+
+input[type='checkbox']{
+	display: none;
+}
+
+input[type='checkbox'] + label span{
+	display:inline-block;
+	width: 19px;
+	height: 19px;
+	margin:-1px 4px 0 0;
+    vertical-align:middle;
+	background: url('../Media/check_radio_sheet.png') left top no-repeat;
+	cursor: pointer;
+}
+
+input[type="checkbox"]:checked + label span {
+    background:url('../Media/check_radio_sheet.png') -19px top no-repeat;
 }
 
 select{
@@ -70,6 +108,10 @@ select{
   padding-top: 2px;
   padding-left: 2px;
   height: 100%;
+}
+
+h3 {
+	text-align: center;
 }
 
 .clear{

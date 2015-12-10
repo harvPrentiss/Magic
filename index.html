@@ -6,26 +6,27 @@
   <body>
     <div class="contentContainer">
     	<div ng-controller="mainController"> 
-            <div class='mainFilterContainer'>           
+            <div class='mainFilterContainer'>  
+                <h3>Card Search Filters</h3>         
                     <div class="filterContainer">
                         <label class="filterLabel">Color: </label>
                         <label ng-repeat="color in colorFilter">
-                            <input type="checkbox"  value="{{color.name}}" ng-model="color.selected"/>
-                            {{color.name}}
+                            <input type="checkbox" id="{{color.name}}" value="{{color.name}}" ng-model="color.selected"/>
+                            <label for="{{color.name}}"><span></span>{{color.name}}</label>
                         </label>
                         <br/>
                         <br/>
                         <label class="filterLabel">Rarity: </label>
                         <label ng-repeat="rarity in rarityFilter">
-                            <input type="checkbox"  value="{{rarity.name}}" ng-model="rarity.selected"/>
-                            {{rarity.name}}
+                            <input type="checkbox" id="{{rarity.name}}"  value="{{rarity.name}}" ng-model="rarity.selected"/>
+                            <label for="{{rarity.name}}"><span></span>{{rarity.name}}</label>
                         </label>
                         <br/>
                         <br/>
                         <label class="filterLabel">Type: </label>
                         <label ng-repeat="type in typeFilter">
-                            <input type="checkbox"  value="{{type.name}}" ng-model="type.selected"/>
-                            {{type.name}}
+                            <input type="checkbox" id='{{type.name}}' value="{{type.name}}" ng-model="type.selected"/>
+                            <label for='{{type.name}}'><span></span>{{type.name}}</label>
                         </label>
                     </div>
                     <div class="filterContainer">
@@ -62,10 +63,9 @@
                         <label class="filterLabel">Card Name: </label>
                         <input type="text" ng-model="nameFilter"/>
                     </div>
-                    <div class='filterContainer'>
-                        <input type='button' ng-click='cardSearch()' value='Search'/>
-                    </div>
                     <br class="clear"/>
+                    <input type='button' class='searchBtn' ng-click='cardSearch()' value='Search'/>
+                    
             </div>
             <div class='searchResultContainer'>
                 <div class='searchResult' ng-repeat='result in searchResults'>
