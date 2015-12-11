@@ -1,11 +1,45 @@
 <!doctype html>
-<html ng-app='myApp'>
+<html ng-app='magicCards'>
   <head>
     <link rel="stylesheet" href="app/Styles/global.css">
   </head>
-  <body>
+  <body ng-controller="applicationController">
+    <div class="loginRegControls">
+        <h2 class="siteTitle">Magic</h2>
+        <div ng-show="!login && !register" class="logRegBtnsBox">
+            <button ng-click="setLogin()" class='logRegBtns'>Login</button>
+            <button ng-click="setRegister()" class='logRegBtns'>Register</button>
+        </div>
+        <div ng-show="login" class="loginControls">
+            <form name='loginForm' ng-controller='loginController' ng-submit="login(credentials)" novalidate>
+                <label for="email">Email:</label>
+                <input type="text" name="userEmail" id="email" ng-model="credentials.userEmail">
+
+                <label for="password">Password:</label>
+                <input type="password" name="userPassword" id="password" ng-model="credentials.userPassword">
+
+                <button type="submit" class='logRegBtns'>Login</button>
+                <button ng-click="setNone()" class='logRegBtns'>Cancel</button>
+            </form>
+        </div>
+        <div ng-show="register" class='registerControls'>
+            <form name='registrationForm' ng-controller='registrationController' ng-submit="register(registrationData)" novalidate>
+                <label for="email">Email:</label>
+                <input type="text" name="userEmail" id="regEmail" ng-model="registrationData.userEmail">
+
+                <label for="username">Username:</label>
+                <input type="text" name="userName" id="regUsername" ng-model="registrationData.userName">
+
+                <label for="email">Password:</label>
+                <input type="password" name="userPassword" id="regPassword" ng-model="registrationData.userPassword">
+
+                <button type="submit" class='logRegBtns'>Register</button>
+                <button ng-click="setNone()" class='logRegBtns'>Cancel</button>
+            </form>
+        </div>
+    </div>
     <div class="contentContainer">
-    	<div ng-controller="mainController"> 
+    	<div ng-controller="searchController"> 
             <div class='mainFilterContainer'>  
                 <h3>Card Search Filters</h3>         
                     <div class="filterContainer">
@@ -87,5 +121,9 @@
       <script src="app/Vendor/angular.min.js"></script>
       <script src="app/Vendor/ngStorage.min.js"></script>
       <script src="app/js/main.js"></script>
+      <script src='app/js/applicationController.js'></script>
+      <script src='app/js/registrationController.js'></script>s
+      <script src='app/js/loginController.js'></script>
+      <script src="app/js/searchController.js"></script>
   </body>
 </html>

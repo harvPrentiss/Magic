@@ -9,7 +9,7 @@
 		function connect(){
 			try{
 			    //$connection = new PDO( "sqlsrv:Server=". self::SERVER . " ; Database =". self::DATABASE , self::USER, self::PASSWORD);
-			    $connection = new PDO( "mysql:localhost;dbname=harvpren_magicCards;charset=utf8" , self::USER, self::PASSWORD);
+			    $connection = new PDO( "mysql:host=localhost;dbname=harvpren_magicCards;charset=utf8" , self::USER, self::PASSWORD);
 			    $connection->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 			    return $connection;
 			}

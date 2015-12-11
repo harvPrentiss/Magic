@@ -1,4 +1,65 @@
-var app = angular.module('myApp', []);
+var app = angular.module('magicCards', [], function($httpProvider){
+	// Use x-www-form-urlencoded Content-Type
+	  $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+	 
+	  /**
+	   * The workhorse; converts an object to x-www-form-urlencoded serialization.
+	   * @param {Object} obj
+	   * @return {String}
+	   */ 
+	  var param = function(obj) {
+	    var query = '', name, value, fullSubName, subName, subValue, innerObj, i;
+	      
+	    for(name in obj) {
+	      value = obj[name];
+	        
+	      if(value instanceof Array) {
+	        for(i=0; i<value.length; ++i) {
+	          subValue = value[i];
+	          fullSubName = name + '[' + i + ']';
+	          innerObj = {};
+	          innerObj[fullSubName] = subValue;
+	          query += param(innerObj) + '&';
+	        }
+	      }
+	      else if(value instanceof Object) {
+	        for(subName in value) {
+	          subValue = value[subName];
+	          fullSubName = name + '[' + subName + ']';
+	          innerObj = {};
+	          innerObj[fullSubName] = subValue;
+	          query += param(innerObj) + '&';
+	        }
+	      }
+	      else if(value !== undefined && value !== null)
+	        query += encodeURIComponent(name) + '=' + encodeURIComponent(value) + '&';
+	    }
+	      
+	    return query.length ? query.substr(0, query.length - 1) : query;
+	  };
+	 
+	  // Override $http service's default transformRequest
+	  $httpProvider.defaults.transformRequest = [function(data) {
+	    return angular.isObject(data) && String(data) !== '[object File]' ? param(data) : data;
+	  }];
+});
+
+app.constant('AUTH_EVENTS', {
+	loginSuccess: 'auth-login-success',
+	loginFailed: 'auth-login-failed',
+	sessionTimeout: 'auth-session-timeout',
+	notAuthenticated: 'auth-not-authenticated',
+	notAuthorized: 'auth-not-authorized',
+	registrationSuccess: 'auth-registration-success',
+	registrationFailed: 'auth-registration-failed'
+});
+
+app.constant('USER_ROLES', {
+	all : '*',
+	admin: 'admin',
+	user: 'user',
+	guest: 'guest'
+});
 
 app.factory("CardRequester", function($http, $q){
 	var CardRequester = {};
@@ -27,86 +88,63 @@ app.factory("CardRequester", function($http, $q){
 	return CardRequester;
 });
 
-app.controller('mainController', function($scope, CardRequester){
-	var itemID = 0;
-	$scope.title = "Magic";
-	$scope.sets = {};
-	$scope.searchResults = {};
-	$scope.subTypeFilter = '';
-	$scope.superTypeFilter = '';
-	$scope.nameFilter = '';
-	$scope.colorFilter = [{name:'White', selected:false}, {name:'Black', selected:false}, {name:'Blue', selected:false}, {name:'Red', selected:false}, {name:'Green', selected:false}];
-	$scope.typeFilter = [{name:'Creature', selected:false}, {name:'Instant', selected:false}, {name:'Sorcery', selected:false}, {name:'Enchantment', selected:false}, {name:'Artifact', selected:false}, {name:'Land', selected:false}];
-	$scope.rarityFilter = [{name:'Mythic', selected:false}, {name:'Rare', selected:false}, {name:'Uncommon', selected:false}, {name:'Common', selected:false}];
-	$scope.legalityFilter = "";
-	$scope.formatFilter = "";
+app.factory('AuthService', function($http, Session){
+	var authService = {};
 
-	$scope.getSets = function(){
-		CardRequester.makeRequest("sets").then(function(data){
-			$scope.sets = data;
-		});
-	}
-
-	function optionsBuilder(){
-		var optionString = "cards?";
-		//Name
-		if($scope.nameFilter != ""){
-			optionString += "name=" + $scope.nameFilter + "&";
-		}		
-		//Color
-		for(var i = 0; i < $scope.colorFilter.length; i++){
-			if($scope.colorFilter[i].selected){
-				optionString += "color=" + angular.lowercase($scope.colorFilter[i].name) + "&";
-			}
-		}
-		//Type
-		for(i = 0; i < $scope.typeFilter.length; i++){
-			if($scope.typeFilter[i].selected){
-				optionString += "type=" + angular.lowercase($scope.typeFilter[i].name) + "&";
-			}
-		}
-		//Rarity
-		for(i = 0; i < $scope.rarityFilter.length; i++){
-			if($scope.rarityFilter[i].selected){
-				optionString += "rarity=" + angular.lowercase($scope.rarityFilter[i].name) + "&";
-			}
-		}
-		//Legality
-		if($scope.legalityFilter != ""){
-			optionString += "status=" + angular.lowercase($scope.legalityFilter) + "&";
-		}
-		//format
-		if($scope.formatFilter != ""){
-			optionString += "format=" + angular.lowercase($scope.formatFilter) +  "&";
-		}
-		//Subtype
-		if($scope.subTypeFilter != ""){
-			optionString += "subtype=" + angular.lowercase($scope.subTypeFilter) + "&";
-		}
-		//Supertype
-		if($scope.superTypeFilter != ""){
-			optionString += "supertype=" + angular.lowercase($scope.superTypeFilter);
-		}
-		return optionString;
-	}
-
-	$scope.cardSearch = function(){
-		var options = optionsBuilder();
-		CardRequester.makeRequest(options).then(function(data){
-			$scope.searchResults = data;
-			console.log(data);
+	authService.login = function(credentials){
+		return $http({
+			method: 'POST',
+			url:'app/PHP/dataRetriever.php',
+			data: credentials
+		})
+		.then(function(res){
+			console.log(res);
+			/*Session.create(res.data.id, res.data.userName, "User");
+			return res.data.userName;*/
 		});
 	};
 
-	$scope.getImageSource = function(editions){
-		for(var i = 0; i < editions.length; i++){
-			if(editions[i].image_url != "https://image.deckbrew.com/mtg/multiverseid/0.jpg"){
-				return editions[i].image_url;
-			}
+	authService.isAuthenticated = function(){
+		return !!Session.userId;
+	};
+
+	authService.isAuthorized = function(authorizedRoles){
+		if(!angular.isArray(authorizedRoles)){
+			authorizedRoles = [authorizedRoles];
 		}
+		return (authService.isAuthenticated() && authorizedRoles.indexOf(Session.userRole) !== -1);
+	};
 
-		return "https://image.deckbrew.com/mtg/multiverseid/0.jpg";
-	}
-
-	$scope.getSets();
+	return authService;
 });
+
+app.factory('RegService', function($http, Session){
+	var regService = {};
+
+	regService.register = function(userData){
+		return $http({
+			method: 'POST',
+			url:'app/PHP/dataRetriever.php',
+			data: userData
+		})
+		.then(function(res){
+			Session.create(res.data.id, res.data.userName, "User");
+			return res.data.userName;
+		});
+	};
+
+	return regService;
+});
+
+app.service('Session', function(){
+	this.create = function(sessionId, userName, userRole){
+		this.id = sessionId + userName;
+		this.userName = userName;
+		this.userRole = userRole;
+	};
+	this.destroy = function(){
+		this.id = null;
+		this.userId = null;
+		this.userRole = null;
+	};
+})
