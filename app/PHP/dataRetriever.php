@@ -67,14 +67,12 @@
 				$userData = array();
 				$userData['id'] = $result['id'];
 				$userData['userName'] = $result['userName'];
-				$userData['userEmail'] = $result['userEmail'];
+				$userData['userEmail'] = $result['email'];
 				$userData['dateJoined'] = $result['dateJoined'];
 				echo json_encode($userData);
 			}
 			else{			
 				$errorObject['message'] = 'Incorrect password';
-				$errorObject['passHash'] = $result['passwordHash'];
-				$errorObject['userPass'] = getSecurePassword($_POST['userPassword']);
 				echo json_encode($errorObject);
 			}
 		}
@@ -96,15 +94,16 @@
 		$userName = $_POST['userName'];
 		$stmt = $dbConnection->prepare("INSERT INTO users (email, userName, passwordHash, dateJoined) VALUES ('$userEmail', '$userName', '$passwordHash', '$date')");
 		$stmt->execute();
-		if($stmt == TRUE){
-			$userData = array();
+		$userData = array();
+		if($stmt == TRUE){			
 			$userData['userName'] = $_POST['userName'];
-			$userData['id'] = $dbConnection->lastInsertId();
-			echo json_encode($userData);
+			$userData['id'] = $dbConnection->lastInsertId();			
 		}
 		else{
-			echo json_encode("Failure");
+			$userData['userName'] = 'Failure';
+			$userData['id'] = -1;
 		}
+		echo json_encode($userData);
 	}
 
 	// Internal functions

@@ -5,124 +5,63 @@
   </head>
   <body ng-controller="applicationController">
     <div class="loginRegControls">
-        <h2 class="siteTitle">Magic</h2>
-        <div ng-show="!login && !register" class="logRegBtnsBox">
-            <button ng-click="setLogin()" class='logRegBtns'>Login</button>
-            <button ng-click="setRegister()" class='logRegBtns'>Register</button>
-        </div>
-        <div ng-show="login" class="loginControls">
-            <form name='loginForm' ng-controller='loginController' ng-submit="login(credentials)" novalidate>
-                <label for="email">Email:</label>
-                <input type="text" name="userEmail" id="email" ng-model="credentials.userEmail">
+        <h2 class="siteTitle"><a href="#main" class="homeLink">Magic</a></h2>
+        <div ng-switch="userStatus">            
+            <div ng-switch-when="login" class="loginControls animate-switch">
+                <form name='loginForm' ng-controller='loginController' ng-submit="login(credentials)" novalidate>
+                    <label for="email">Email:</label>
+                    <input type="text" name="userEmail" id="email" ng-model="credentials.userEmail">
 
-                <label for="password">Password:</label>
-                <input type="password" name="userPassword" id="password" ng-model="credentials.userPassword">
+                    <label for="password">Password:</label>
+                    <input type="password" name="userPassword" id="password" ng-model="credentials.userPassword">
 
-                <button type="submit" class='logRegBtns'>Login</button>
-                <button ng-click="setNone()" class='logRegBtns'>Cancel</button>
-            </form>
-        </div>
-        <div ng-show="register" class='registerControls'>
-            <form name='registrationForm' ng-controller='registrationController' ng-submit="register(registrationData)" novalidate>
-                <label for="email">Email:</label>
-                <input type="text" name="userEmail" id="regEmail" ng-model="registrationData.userEmail">
+                    <button type="submit" class='logRegBtns'>Login</button>
+                    <button ng-click="setNone()" class='logRegBtns'>Cancel</button>
+                </form>
+            </div>
+            <div ng-switch-when="register" class='registerControls animate-switch'>
+                <form name='registrationForm' ng-controller='registrationController' ng-submit="register(registrationData)" novalidate>
+                    <label for="email">Email:</label>
+                    <input type="text" name="userEmail" id="regEmail" ng-model="registrationData.userEmail">
 
-                <label for="username">Username:</label>
-                <input type="text" name="userName" id="regUsername" ng-model="registrationData.userName">
+                    <label for="username">Username:</label>
+                    <input type="text" name="userName" id="regUsername" ng-model="registrationData.userName">
 
-                <label for="email">Password:</label>
-                <input type="password" name="userPassword" id="regPassword" ng-model="registrationData.userPassword">
+                    <label for="email">Password:</label>
+                    <input type="password" name="userPassword" id="regPassword" ng-model="registrationData.userPassword">
 
-                <button type="submit" class='logRegBtns'>Register</button>
-                <button ng-click="setNone()" class='logRegBtns'>Cancel</button>
-            </form>
+                    <button type="submit" class='logRegBtns'>Register</button>
+                    <button ng-click="setNone()" class='logRegBtns'>Cancel</button>
+                </form>
+            </div>
+            <div ng-switch-when="loggedIn" class='userInfo animate-switch'>
+                <label class="userNameLbl headerItem">{{currentUser}}</label>
+                <label class="settingsLbl headerItem">Settings</label>
+                <label class="logoutLbl headerItem">Logout</label>
+            </div>
+            <div ng-switch-default class="logRegBtnsBox animate-switch">
+                <button ng-click="setLogin()" class='logRegBtns'>Login</button>
+                <button ng-click="setRegister()" class='logRegBtns'>Register</button>
+            </div>
         </div>
     </div>
-    <div class="contentContainer">
-    	<div ng-controller="searchController"> 
-            <div class='mainFilterContainer'>  
-                <h3>Card Search Filters</h3>         
-                    <div class="filterContainer">
-                        <label class="filterLabel">Color: </label>
-                        <label ng-repeat="color in colorFilter">
-                            <input type="checkbox" id="{{color.name}}" value="{{color.name}}" ng-model="color.selected"/>
-                            <label for="{{color.name}}"><span></span>{{color.name}}</label>
-                        </label>
-                        <br/>
-                        <br/>
-                        <label class="filterLabel">Rarity: </label>
-                        <label ng-repeat="rarity in rarityFilter">
-                            <input type="checkbox" id="{{rarity.name}}"  value="{{rarity.name}}" ng-model="rarity.selected"/>
-                            <label for="{{rarity.name}}"><span></span>{{rarity.name}}</label>
-                        </label>
-                        <br/>
-                        <br/>
-                        <label class="filterLabel">Type: </label>
-                        <label ng-repeat="type in typeFilter">
-                            <input type="checkbox" id='{{type.name}}' value="{{type.name}}" ng-model="type.selected"/>
-                            <label for='{{type.name}}'><span></span>{{type.name}}</label>
-                        </label>
-                    </div>
-                    <div class="filterContainer">
-                        <label class="filterLabel">Format: </label>
-                        <input type="radio" value="Standard" ng-model="formatFilter">Standard</input>
-                        <input type="radio" value="Modern" ng-model="formatFilter">Modern</input>
-                        <input type="radio" value="Commander" ng-model="formatFilter">Commander</input>
-                        <input type="radio" value="Legacy" ng-model="formatFilter">Legacy</input>
-                        <input type="radio" value="Vintage" ng-model="formatFilter">Vintage</input>
-                        <input type="radio" value="" ng-model="formatFilter" checked>None</input>
-                        <br/>
-                        <br/>
-                        <label class="filterLabel">Status: </label>
-                        <input type="radio" value="Legal" ng-model="legalityFilter">Legal</input>
-                        <input type="radio" value="Restricted" ng-model="legalityFilter">Restricted</input>
-                        <input type="radio" value="Banned" ng-model="legalityFilter">Banned</input>
-                        <input type="radio" value="" ng-model="legalityFilter" checked>None</input>
-                    </div>
-                    <div class="filterContainer">
-                        <label class="filterLabel" for='setName' style='vertical-align: top;'>Set Name:</label>
-                        <select id="setName" multiple>
-                            <option ng-repeat="set in sets" value="set.id">{{set.name}}</option>
-                        </select>
-                    </div>
-                    <div class='filterContainer'>
-                        <label class="filterLabel">Card Subtype: </label>
-                        <input type="text" ng-model="subTypeFilter"/>
-                        <br/>
-                        <br/>
-                        <label class="filterLabel">Card Supertype: </label>
-                        <input type="text" ng-model="superTypeFilter"/>
-                        <br/>
-                        <br/>
-                        <label class="filterLabel">Card Name: </label>
-                        <input type="text" ng-model="nameFilter"/>
-                    </div>
-                    <br class="clear"/>
-                    <input type='button' class='searchBtn' ng-click='cardSearch()' value='Search'/>
-                    
-            </div>
-            <div class='searchResultContainer'>
-                <div class='searchResult' ng-repeat='result in searchResults'>
-                    <div class='card'>
-                        <img ng-src="{{getImageSource(result.editions)}}"/>
-                        <div class='cardControls'>
-                            <div class='favImg ctrlLabel'></div>
-                            <div class='addImg ctrlLabel'></div>
-                            <div class='subImg ctrlLabel'></div>
-                        </div>
-                    </div>                    
-                </div>
-                <br class="clear"/>
-            </div>
-        </div>
+    <div class="userNavigation">
+        <div><a href="#cardSearch">Card Search</a></div>
+        <div><a href="#deckBuild">Deck Builder</a></div>
+        <div ng-show="loggedIn"><a href="#myCards">My Cards</a></div>
+    </div>
+    <div class="contentContainer">        
+    	<div ng-view></div>
     </div>
 
 
       <script src="app/Vendor/angular.min.js"></script>
+      <script src="app/Vendor/angular-route-min.js"></script>
       <script src="app/Vendor/ngStorage.min.js"></script>
       <script src="app/js/main.js"></script>
+      <script src="app/js/homeController.js"></script>
       <script src='app/js/applicationController.js'></script>
-      <script src='app/js/registrationController.js'></script>s
+      <script src='app/js/registrationController.js'></script>
       <script src='app/js/loginController.js'></script>
       <script src="app/js/searchController.js"></script>
   </body>

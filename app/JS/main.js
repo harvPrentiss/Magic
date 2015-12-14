@@ -1,4 +1,4 @@
-var app = angular.module('magicCards', [], function($httpProvider){
+var app = angular.module('magicCards', ['ngRoute'], function($httpProvider){
 	// Use x-www-form-urlencoded Content-Type
 	  $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
 	 
@@ -43,6 +43,25 @@ var app = angular.module('magicCards', [], function($httpProvider){
 	    return angular.isObject(data) && String(data) !== '[object File]' ? param(data) : data;
 	  }];
 });
+
+app.config(['$routeProvider', function($routeProvider){
+	$routeProvider.
+		when('/main', {
+			templateUrl: 'app/Views/main.html',
+			controller: 'homeController'
+		}).
+		when('/cardSearch', {
+			templateUrl: 'app/Views/cardSearch.html',
+			controller: 'searchController'
+		}).
+		when('/editUser',{
+			templateUrl: 'app/Views/editUser.html',
+			controller: 'editController'
+		}).
+		otherwise({
+			redirectTo: '/main'
+		});
+}]);
 
 app.constant('AUTH_EVENTS', {
 	loginSuccess: 'auth-login-success',
@@ -98,9 +117,8 @@ app.factory('AuthService', function($http, Session){
 			data: credentials
 		})
 		.then(function(res){
-			console.log(res);
-			/*Session.create(res.data.id, res.data.userName, "User");
-			return res.data.userName;*/
+			Session.create(res.data.id, res.data.userName, "User");			
+			return res.data.userName;
 		});
 	};
 

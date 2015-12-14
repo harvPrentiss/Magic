@@ -9,27 +9,22 @@ function applicationController($scope, USER_ROLES, AuthService)
 	$scope.currentUser = null;
 	$scope.userRoles = USER_ROLES;
 	$scope.isAuthorized = AuthService.isAuthorized;
-	$scope.register = false;
-	$scope.login = false;
-	$scope.welcome = false;
+	$scope.userStatus = "none";
+	$scope.loggedIn = false;
 	$scope.setCurrentUser = function(user){
-		$scope.currentUser = user;
-	};
-	$scope.setLoggedIn = function(user){
-		$scope.register = false;
-		$scope.login = false;
-		$scope.welcome = true;
+		$scope.currentUser = user;		
 	};
 	$scope.setLogin = function(){
-		$scope.login = true;
-		$scope.register = false;
+		$scope.userStatus = "login";
 	};
 	$scope.setRegister = function(){
-		$scope.register = true;
-		$scope.login = false;
+		$scope.userStatus = "register";
+	};
+	$scope.setLoggedIn = function(){
+		$scope.userStatus = "loggedIn";
+		$scope.loggedIn = true;
 	};
 	$scope.setNone = function(){
-		$scope.register = false;
-		$scope.login = false;
+		$scope.userStatus = "none";
 	};
 }

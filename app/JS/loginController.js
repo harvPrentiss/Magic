@@ -16,6 +16,7 @@ function loginController($scope, $rootScope, AUTH_EVENTS, AuthService)
 		AuthService.login(credentials).then(function (user){
 			$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
 			$scope.setCurrentUser(user);
+			$scope.setLoggedIn();
 		}, function() {
 			$rootScope.$broadcast(AUTH_EVENTS.loginFailed);
 		});
