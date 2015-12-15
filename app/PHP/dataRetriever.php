@@ -21,6 +21,9 @@
 			case 'getUser': getUser(); break;			
 			case 'deleteUser': deleteUser(); break;
 			case 'updateUser': updateUser(); break;
+			case 'addInv' : addToInv(); break;
+			case 'subInv' : subFromInv(); break;
+			case 'getInv' : getInventory(); break;
 			case 'getDecks' : getDecks(); break;
 			case 'createDeck' : createDeck(); break;
 			case 'updateDeck' : updateDeck(); break;
@@ -114,6 +117,105 @@
 
 	function verifyPassword($password, $hash){
 		return password_verify($password, $hash);
+	}
+
+	function addToInv(){
+		global $dbConnection;
+		if(!connectionExists()){
+			getConnection();
+		}
+		$count = $_POST['count'];
+		$cardId = $_POST['cardID'];
+		$userId = $_POST['userId'];
+		$existenceTest = $dbConnection->prepare("SELECT COUNT(*) FROM cardInventory WHERE cardId = :cardId AND userId = :userId");
+		$existenceTest->bindParam(':cardId', $cardId, PDO::PARAM_INT);
+		$existenceTest->bindParam(':userId', $userId, PDO::PARAM_INT);
+		$existenceTest->execute();
+		if($existenceTest == TRUE){
+			if($existenceTest->fetchColumn() > 0){
+				$stmt = $dbConnection->prepare("UPDATE cardInventory SET count=count + :count WHERE cardId = :cardId AND userId = :userId");
+				$stmt->bindParam(':cardId', $cardId, PDO::PARAM_INT);
+				$stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+				$stmt->bindParam(':count', $count, PDO::PARAM_INT);
+				$stmt->execute();
+				$addResult = array();
+				if($stmt == TRUE){
+					$addResult['result'] = 'Success';
+				}
+				else{
+					$addResult['result'] = 'Failed';
+				}
+				echo json_encode($addResult);
+			}
+			else{
+				$stmt = $dbConnection->prepare("INSERT INTO cardInventory (userId, cardId, count) VALUES (:userId, :cardId, :count)");
+				$stmt->bindParam(':cardId', $cardId, PDO::PARAM_INT);
+				$stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+				$stmt->bindParam(':count', $count, PDO::PARAM_INT);
+				$stmt->execute();
+				$addResult = array();
+				if($stmt == TRUE){
+					$addResult['result'] = 'Success';
+				}
+				else{
+					$addResult['result'] = 'Failed';
+				}
+				echo json_encode($addResult);
+			}
+		}		
+	}
+
+	function subFromInv(){
+		global $dbConnection;
+		if(!connectionExists()){
+			getConnection();
+		}
+		$count = $_POST['count'];
+		$cardId = $_POST['cardID'];
+		$userId = $_POST['userId'];
+		$existenceTest = $dbConnection->prepare("SELECT COUNT(*) FROM cardInventory WHERE cardId = :cardId AND userId = :userId");
+		$existenceTest->bindParam(':cardId', $cardId, PDO::PARAM_INT);
+		$existenceTest->bindParam(':userId', $userId, PDO::PARAM_INT);
+		$existenceTest->execute();
+		if($existenceTest == TRUE){
+			if($existenceTest->fetchColumn() > 0){
+				$stmt = $dbConnection->prepare("UPDATE cardInventory SET count=count - :count WHERE cardId = :cardId AND userId = :userId AND count > 0");
+				$stmt->bindParam(':cardId', $cardId, PDO::PARAM_INT);
+				$stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+				$stmt->bindParam(':count', $count, PDO::PARAM_INT);
+				$stmt->execute();
+				$subResult = array();
+				if($stmt == TRUE){
+					$subResult['result'] = 'Success';
+				}
+				else{
+					$subResult['result'] = 'Failed';
+				}
+				echo json_encode($subResult);
+			}
+			else{
+				$subResult = array();
+				$subResult['result'] = 'Card not in inventory or the inventory count is 0';
+				echo json_encode($subResult);
+			}
+		}		
+	}
+
+	function getInventory(){
+		global $dbConnection;
+		if(!connectionExists()){
+			getConnection();
+		}
+		$userId = $_POST['userId'];
+		$stmt = $dbConnection->prepare("SELECT cardId, count FROM cardInventory WHERE userId = :userId");
+		$stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+		$stmt->execute();
+		if($stmt->rowCount() > 0){
+			echo json_encode($stmt->fetchAll());
+		}
+		else{
+			echo json_encode($_POST);
+		}
 	}
 	
 

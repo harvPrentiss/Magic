@@ -1,4 +1,4 @@
-<div ng-controller="searchController"> 
+<div class="searchContainer" ng-controller="searchController"> 
             <div class='mainFilterContainer'>  
                 <h3>Card Search Filters</h3>         
                     <div class="filterContainer">
@@ -64,10 +64,11 @@
                 <div class='searchResult' ng-repeat='result in searchResults'>
                     <div class='card'>
                         <img ng-src="{{getImageSource(result.editions)}}"/>
-                        <div class='cardControls'>
+                        <div class='cardControls' ng-controller="inventoryController">
                             <div class='favImg ctrlLabel'></div>
-                            <div class='addImg ctrlLabel'></div>
-                            <div class='subImg ctrlLabel'></div>
+                            <div class='addImg ctrlLabel' ng-click="addCardData(result.editions[0].multiverse_id)"></div>
+                            <div class='subImg ctrlLabel' ng-click="subCardData(result.editions[0].multiverse_id)"></div>
+                            <div class='countBox ctrlLabel'><input class="adjCountText" type="text" ng-model="requestData.count" /></div>
                         </div>
                     </div>                    
                 </div>

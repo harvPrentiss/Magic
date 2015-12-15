@@ -1,0 +1,15 @@
+<div class='searchResultContainer' ng-controller="inventoryController">
+    <div class='searchResult' ng-repeat='card in inventory'>
+        <div class='card'>
+            <img ng-src="{{getImageSource(card.editions)}}"/>
+            <div class='cardControls'>
+            	<div class='invCount ctrlLabel'>{{card.count}}</div>
+            	<div class='favImg ctrlLabel'></div>
+            	<div class='addImg ctrlLabel' ng-click="addCardData(card.editions[0].multiverse_id)"></div>
+            	<div class='subImg ctrlLabel' ng-click="subCardData(card.editions[0].multiverse_id)"></div>
+            	<div class='countBox ctrlLabel'><input class="adjCountText" type="text" ng-model="requestData.count" /></div>
+        	</div>
+    	</div>                    
+    </div>
+    <br class="clear"/>
+</div>

@@ -1,4 +1,4 @@
-var app = angular.module('magicCards', ['ngRoute'], function($httpProvider){
+var app = angular.module('magicCards', ['ngRoute', 'ngCookies', 'flash'], function($httpProvider){
 	// Use x-www-form-urlencoded Content-Type
 	  $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
 	 
@@ -58,6 +58,9 @@ app.config(['$routeProvider', function($routeProvider){
 			templateUrl: 'app/Views/editUser.html',
 			controller: 'editController'
 		}).
+		when('/myCards', {
+			templateUrl: 'app/Views/myCards.html',
+		}).
 		otherwise({
 			redirectTo: '/main'
 		});
@@ -107,7 +110,7 @@ app.factory("CardRequester", function($http, $q){
 	return CardRequester;
 });
 
-app.factory('AuthService', function($http, Session){
+app.factory('AuthService', function($http, $cookies, Session){
 	var authService = {};
 
 	authService.login = function(credentials){
@@ -117,7 +120,10 @@ app.factory('AuthService', function($http, Session){
 			data: credentials
 		})
 		.then(function(res){
-			Session.create(res.data.id, res.data.userName, "User");			
+			Session.create(res.data.id, res.data.userName, "User");
+			$cookies.put('loggedIn', 'true');
+			$cookies.put('userId', res.data.id);
+			$cookies.put('userName', res.data.userName);			
 			return res.data.userName;
 		});
 	};
@@ -125,6 +131,15 @@ app.factory('AuthService', function($http, Session){
 	authService.isAuthenticated = function(){
 		return !!Session.userId;
 	};
+
+	authService.isLoggedIn = function(){
+		if($cookies.get('userId')){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 
 	authService.isAuthorized = function(authorizedRoles){
 		if(!angular.isArray(authorizedRoles)){
@@ -154,15 +169,64 @@ app.factory('RegService', function($http, Session){
 	return regService;
 });
 
+app.factory('InventoryManager', function($http, $cookies){
+	var invManager = {};
+
+	invManager.modify = function(requestData){
+		requestData.userId = $cookies.get('userId');
+		return $http({
+			method: 'POST',
+			url:'app/PHP/dataRetriever.php',
+			data: requestData
+		})
+		.then(function(res){
+			return res;
+		});
+	};
+
+	return invManager;
+});
+
+app.factory('NotifyingService', function($rootScope){
+	return {
+        subscribe: function(scope, callback) {
+            var handler = $rootScope.$on('notifying-service-event', callback);
+            scope.$on('$destroy', handler);
+        },
+
+        notify: function() {
+            $rootScope.$emit('notifying-service-event');
+        }
+    };
+});
+
 app.service('Session', function(){
-	this.create = function(sessionId, userName, userRole){
-		this.id = sessionId + userName;
+	this.create = function(userId, userName, userRole){
+		this.id = userId + userName;
+		this.userId = userId;
 		this.userName = userName;
 		this.userRole = userRole;
 	};
 	this.destroy = function(){
 		this.id = null;
 		this.userId = null;
+		this.userId = null;
 		this.userRole = null;
 	};
-})
+	this.get = function(){
+		return this;
+	}
+});
+
+app.run(function($rootScope, $cookies, AuthService, NotifyingService){
+	$rootScope.$on('$routeChangeStart', function(){
+		if(!AuthService.isLoggedIn){
+			$location.path('/main');
+		}
+		else{
+			if($cookies.get('userId')){
+				NotifyingService.notify();
+			}
+		}
+	});
+});

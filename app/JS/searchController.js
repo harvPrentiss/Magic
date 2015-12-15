@@ -72,7 +72,6 @@ function searchController($scope, CardRequester)
 		var options = optionsBuilder();
 		CardRequester.makeRequest(options).then(function(data){
 			$scope.searchResults = data;
-			console.log(data);
 		});
 	};
 
@@ -85,6 +84,10 @@ function searchController($scope, CardRequester)
 
 		return "https://image.deckbrew.com/mtg/multiverseid/0.jpg";
 	}
+
+	$scope.getCardID = function(editions){
+		return editions[0].multiverse_id;
+	};
 
 	$scope.getSets();
 }

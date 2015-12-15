@@ -1,7 +1,8 @@
 <!doctype html>
 <html ng-app='magicCards'>
   <head>
-    <link rel="stylesheet" href="app/Styles/global.css">
+    <link type="text/css" rel="stylesheet" href="app/Styles/global.css">
+    <link type="text/css" rel="stylesheet" href="app/Styles/angular-flash.css" />
   </head>
   <body ng-controller="applicationController">
     <div class="loginRegControls">
@@ -44,25 +45,28 @@
                 <button ng-click="setRegister()" class='logRegBtns'>Register</button>
             </div>
         </div>
-    </div>
-    <div class="userNavigation">
-        <div><a href="#cardSearch">Card Search</a></div>
-        <div><a href="#deckBuild">Deck Builder</a></div>
-        <div ng-show="loggedIn"><a href="#myCards">My Cards</a></div>
-    </div>
+        <div class="userNavigation">
+            <div><a href="#cardSearch">Card Search</a></div>
+            <div><a href="#deckBuild">Deck Builder</a></div>
+            <div ng-show="loggedIn"><a href="#myCards">My Cards</a></div>
+        </div>
+    </div>    
     <div class="contentContainer">        
     	<div ng-view></div>
     </div>
+    <div flash-message="5000"></div>
 
 
       <script src="app/Vendor/angular.min.js"></script>
       <script src="app/Vendor/angular-route-min.js"></script>
-      <script src="app/Vendor/ngStorage.min.js"></script>
+      <script src="app/Vendor/angular-cookies-min.js"></script>
+      <script src="app/Vendor/angular-flash.js"></script>
       <script src="app/js/main.js"></script>
       <script src="app/js/homeController.js"></script>
       <script src='app/js/applicationController.js'></script>
       <script src='app/js/registrationController.js'></script>
       <script src='app/js/loginController.js'></script>
       <script src="app/js/searchController.js"></script>
+      <script src="app/js/inventoryController.js"></script>
   </body>
 </html>

@@ -2,9 +2,9 @@ angular.module('magicCards')
 
 .controller('applicationController', applicationController);
 
-applicationController.$inject = ['$scope', 'USER_ROLES', 'AuthService'];
+applicationController.$inject = ['$scope', '$cookies', 'USER_ROLES', 'AuthService', 'NotifyingService'];
 
-function applicationController($scope, USER_ROLES, AuthService)
+function applicationController($scope, $cookies, USER_ROLES, AuthService, NotifyingService)
 {
 	$scope.currentUser = null;
 	$scope.userRoles = USER_ROLES;
@@ -27,4 +27,10 @@ function applicationController($scope, USER_ROLES, AuthService)
 	$scope.setNone = function(){
 		$scope.userStatus = "none";
 	};
+
+	NotifyingService.subscribe($scope, function changed(){
+		$scope.userStatus = "loggedIn";
+		$scope.loggedIn = true;
+		$scope.currentUser = $cookies.get('userName');
+	});
 }

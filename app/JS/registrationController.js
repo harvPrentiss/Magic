@@ -2,9 +2,9 @@ angular.module('magicCards')
 
 .controller('registrationController', registrationController);
 
-registrationController.$inject = ['$scope', '$rootScope', 'AUTH_EVENTS', 'RegService'];
+registrationController.$inject = ['$scope', '$rootScope', 'AUTH_EVENTS', 'RegService', 'Flash'];
 
-function registrationController($scope, $rootScope, AUTH_EVENTS, RegService)
+function registrationController($scope, $rootScope, AUTH_EVENTS, RegService, Flash)
 {
 	$scope.registrationData = {
 		userEmail: '',
@@ -18,6 +18,7 @@ function registrationController($scope, $rootScope, AUTH_EVENTS, RegService)
 			$rootScope.$broadcast(AUTH_EVENTS.registrationSuccess);
 			$scope.setCurrentUser(user);
 			$scope.setLoggedIn(user);
+			Flash.create('success', "You have registered successfully!", 'custom-class');
 		}, function() {
 			$rootScope.$broadcast(AUTH_EVENTS.registrationFailed);
 		});
