@@ -16,8 +16,8 @@ function searchController($scope, CardRequester)
 	$scope.colorFilter = [{name:'White', selected:false}, {name:'Black', selected:false}, {name:'Blue', selected:false}, {name:'Red', selected:false}, {name:'Green', selected:false}];
 	$scope.typeFilter = [{name:'Creature', selected:false}, {name:'Instant', selected:false}, {name:'Sorcery', selected:false}, {name:'Enchantment', selected:false}, {name:'Artifact', selected:false}, {name:'Land', selected:false}];
 	$scope.rarityFilter = [{name:'Mythic', selected:false}, {name:'Rare', selected:false}, {name:'Uncommon', selected:false}, {name:'Common', selected:false}];
-	$scope.legalityFilter = "";
-	$scope.formatFilter = "";
+	$scope.legalityFilter = [{name:"Legal", selected:false}, {name:"Banned", selected:false}, {name:"Restricted", selected:false}];
+	$scope.formatFilter = [{name:"Standard", selected:false}, {name:"Modern", selected:false}, {name:"Commander", selected:false}, {name:"Legacy", selected:false}, {name:"Vintage", selected:false}];
 
 	$scope.getSets = function(){
 		CardRequester.makeRequest("sets").then(function(data){
@@ -50,12 +50,16 @@ function searchController($scope, CardRequester)
 			}
 		}
 		//Legality
-		if($scope.legalityFilter != ""){
-			optionString += "status=" + angular.lowercase($scope.legalityFilter) + "&";
+		for(i = 0; i < $scope.legalityFilter.length; i++){
+			if($scope.legalityFilter[i].selected){
+				optionString += "status=" + angular.lowercase($scope.legalityFilter[i].name) + "&";
+			}
 		}
 		//format
-		if($scope.formatFilter != ""){
-			optionString += "format=" + angular.lowercase($scope.formatFilter) +  "&";
+		for(i = 0; i < $scope.formatFilter.length; i++){
+			if($scope.formatFilter[i].selected){
+				optionString += "format=" + angular.lowercase($scope.formatFilter[i].name) +  "&";
+			}
 		}
 		//Subtype
 		if($scope.subTypeFilter != ""){

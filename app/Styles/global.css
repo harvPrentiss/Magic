@@ -18,7 +18,7 @@ body{
 }
 
 .siteTitle{
-	position: absolute;
+	position: relative;
 	top: 5px;
 	left: 10px;
 	color: white;
@@ -38,7 +38,7 @@ body{
 .logRegBtnsBox{
 	position: absolute;
 	top: 5px;
-	right: 10px;	
+	right: 20px;	
 }
 
 .logRegBtns{
@@ -187,24 +187,6 @@ input[type='text']{
   padding-left: 2px;
 }
 
-input[type='checkbox']{
-	display: none;
-}
-
-input[type='checkbox'] + label span{
-	display:inline-block;
-	width: 19px;
-	height: 19px;
-	margin:-1px 4px 0 0;
-    vertical-align:middle;
-	background: url('../Media/check_radio_sheet.png') left top no-repeat;
-	cursor: pointer;
-}
-
-input[type="checkbox"]:checked + label span {
-    background:url('../Media/check_radio_sheet.png') -19px top no-repeat;
-}
-
 select{
   border-radius: 10px;
   padding-top: 2px;
@@ -278,4 +260,43 @@ h3 {
 .animate-switch.ng-leave,
 .animate-switch.ng-enter.ng-enter-active {
   opacity: 1;
+}
+
+
+/* NEw styles */
+
+.pageHeader{
+	background-color: black;
+	height: 50px;
+}
+
+.navMenu{
+	background-color: gray;
+	height: 35px;
+}
+
+.navList{
+	margin-bottom: 0;
+	height: 35px;
+	padding-left: 10px;
+}
+
+.navList li{
+	line-height: 35px;
+}
+
+.navList li a{
+	color: black;
+}
+
+.userControls{
+	right: 30px;
+}
+
+.checkbox{
+	padding-right: 5px;
+}
+
+.radio{
+	padding-right: 5px;
 }
